@@ -1,6 +1,6 @@
 <?php
 
-class QMySQLSelect extends PadraoObjeto { 
+class QFirebirdSelect extends PadraoObjeto { 
 	var $select;
 
 	function __construct($select, $option = array()) { 
@@ -12,9 +12,13 @@ class QMySQLSelect extends PadraoObjeto {
 		$select = $this->select;
 		if ($select->get('type') != 'select') return false;
 
+		$table = $select->get('table');
+
 		$sql = $tab . "SELECT ";
 
-		$table = $select->get('table');
+		$sql .= $this->toParams($select->get('limit'), $table, array());
+
+		// $sql .= $select->get('table');
 
 		$sql .= $this->toParams($select->get('select'), $table, 
 			array('default' => "*", 'fisrt' => '?, ', 'preF' => $tab."\n\t")
@@ -25,8 +29,6 @@ class QMySQLSelect extends PadraoObjeto {
 		$sql .= $this->toParams($select->get('join'), $table, array('preF' => $tab."\nINNER JOIN "));
 
 		$sql .= $this->toParams($select->get('where'), $table, array('fisrt' => 'WHERE ?AND ', 'preF' => $tab."\n"));
-
-		$sql .= $this->toParams($select->get('limit'), $table, array());
 
 		$sql .= ";";
 		return $sql;
@@ -78,7 +80,7 @@ class QMySQLSelect extends PadraoObjeto {
 		$input = $val->get('input');
 		if (in_array(gettype($input), array('string','integer','boolean','double'))) { 
 			$sql .= $input;
-		} else { 
+		} else {
 			$sql .= $this->resolveParam($defaultTable, $input, $as);
 		}
 
@@ -90,7 +92,6 @@ class QMySQLSelect extends PadraoObjeto {
 		} else { 
 			$value = $this->resolveParam($defaultTable, $value, $as);
 		}
-		if ($val->get('password')) $value = "PASSWORD($value)";
 
 		$sql .= $value;
 
@@ -131,10 +132,11 @@ class QMySQLSelect extends PadraoObjeto {
 		$sql = "";
 
 		$sql = $val->get('val') == 0 ? '' : ''
-			. "\nLIMIT " . $val->get('val');
+			. ' FIRST ' . $val->get('val');
 
 		return $sql;
 	}
 }
+
 
 ?>

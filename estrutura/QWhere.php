@@ -1,19 +1,17 @@
 <?php
 
+class QWhere extends PadraoObjeto { 
+	var $input; 				// Objeto do tipo QInput
+	var $value; 				// Valor a ser comparado
+	var $not_number = false; 	// Força as aspas se o for valor numerico
+	var $password = false; 		// Se usa função PASSWORD do MySQL
+	var $type = 'where'; 		// Tipo de Objeto
 
-class QWhere extends PadraoObjeto {
-	var $input;
-	var $value;
-	var $not_number = false;
-	var $password = false;
-	var $type = 'where';
-
-	function __construct($input, $value, $option = array()) {
+	function __construct($input, $value, $option = array()) { 
 		$this->input = $input;
 		$this->value = $value;
 		$this->setOptions($option);
 	}
 }
-
 
 ?>
